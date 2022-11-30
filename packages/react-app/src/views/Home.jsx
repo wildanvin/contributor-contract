@@ -1,10 +1,10 @@
 import { useContractReader } from "eth-hooks";
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import React, { useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 
-import { Button, Card, Divider } from "antd";
+import { Button, Card, Divider, Form, Input } from "antd";
 import { Address, Balance, Events } from "../components";
 
 /**
@@ -33,8 +33,50 @@ function Home({
     doc: "",
     task: "",
     value: 0,
-    time: "",
+    time: 0,
   });
+
+  const { contributor, doc, task, value, time } = formData;
+  //const navigate = useNavigate();
+  const history = useHistory();
+
+  const onMutate = e => {
+    // Text/Booleans/Numbers
+
+    setFormData(prevState => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const onClick = async e => {
+    e.preventDefault();
+    tx(
+      writeContracts.Factory.createContract(
+        formData.contributor,
+        formData.doc,
+        formData.task,
+        utils.parseEther(formData.value),
+        formData.time,
+      ),
+      update => {
+        console.log("📡 Transaction Update:", update);
+        if (update && (update.status === "confirmed" || update.status === 1)) {
+          console.log(" 🍾 Transaction " + update.hash + " finished!");
+          history.push("/exampleui");
+        }
+      },
+    );
+    // let createClassroomTx = await classroomFactory.methods
+    //   .createClassroom(formData.sessions)
+    //   .send({ from: props.accounts[0] })
+    //   .on('receipt', async function (receipt) {
+    //     alert(`Classroom created successfully`)
+    //   })
+
+    //navigate(`/classroom/${idAddress}`);
+    //return <Redirect to="/exampleui" />;
+  };
 
   return (
     <div>
@@ -60,7 +102,115 @@ function Home({
           </Button>
         </Card>
         <Divider />
-        <Card></Card>
+        <Card>
+          <Form
+            name="create-contract"
+            labelCol={{
+              span: 8,
+            }}
+            wrapperCol={{
+              span: 8,
+            }}
+            initialValues={{
+              remember: true,
+            }}
+            // onFinish={onFinish}
+            // onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item
+              label="Contributor"
+              name="contributor"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input contributor address",
+                },
+              ]}
+            >
+              <Input
+                id="contributor"
+                value={contributor}
+                onChange={onMutate}
+                placeholder="0x1d5a5b42e88D48b7De7f813954B91929A266B583"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Document"
+              name="document"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input id="doc" value={doc} onChange={onMutate} placeholder="CID hash" />
+            </Form.Item>
+
+            <Form.Item
+              label="Task"
+              name="task"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the task to be completed",
+                },
+              ]}
+            >
+              <Input id="task" value={task} onChange={onMutate} placeholder="Task to be completed" />
+            </Form.Item>
+
+            <Form.Item
+              label="Reward"
+              name="reward"
+              rules={[
+                {
+                  required: true,
+                  message: "Enter a reward for the contributor",
+                },
+              ]}
+            >
+              <Input id="value" value={value} onChange={onMutate} placeholder="1 ETH" />
+            </Form.Item>
+
+            <Form.Item
+              label="Time"
+              name="time"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input id="time" value={time} onChange={onMutate} placeholder="30 seconds" />
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 4,
+                span: 16,
+              }}
+            >
+              <Button onClick={onClick} type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+
+          <section className="form">
+            <form>
+              {/* <div className="form-group">
+                <button onClick={onClick} className="btn btn-block">
+                  Create Classroom
+                </button>
+                <br />
+                <br />
+                <br />
+              </div> */}
+            </form>
+          </section>
+        </Card>
       </div>
       <div style={{ margin: 32 }}>
         <span style={{ marginRight: 8 }}>📝</span>
