@@ -56,7 +56,7 @@ const { ethers } = require("ethers");
 /// 📡 What chain are your contracts deployed to?
 const initialNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, goerli, xdai, mainnet)
 
-// 😬 Sorry for all the console logging
+// 😬 Sorry for all the console logging test
 const DEBUG = true;
 const NETWORKCHECK = true;
 const USE_BURNER_WALLET = true; // toggle burner wallet feature
