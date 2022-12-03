@@ -9,6 +9,10 @@ import { Address, Balance, Events } from "../components";
 
 import { Contract } from "../components";
 
+import { abi } from "./helper/contractABI";
+
+const { ethers } = require("ethers");
+
 export default function ContractView({
   purpose,
   address,
@@ -25,6 +29,8 @@ export default function ContractView({
 }) {
   const [newPurpose, setNewPurpose] = useState("loading...");
   const params = useParams();
+
+  const contract = new ethers.Contract(params.address, abi, userSigner);
 
   if (params.address == ":address") {
     return <div>Go to contracts Lists</div>;
@@ -58,12 +64,21 @@ export default function ContractView({
             style={{ marginTop: 8 }}
             onClick={async () => {
               console.log(`the address is: ${params.address}`);
-              const result = tx({
-                to: params.address,
-                //value: utils.parseEther("0.001"),
-                data: writeContracts.ContributorContract.interface.encodeFunctionData("test()", []),
-              });
-              console.log(`The result is : ${JSON.stringify(await result)}`);
+
+              try {
+                const txResponse = await contract.milestone();
+                //await listenForTransactionMine(txResponse, provider);
+                console.log("Done!");
+                console.log(txResponse);
+              } catch (error) {
+                console.log(error);
+              }
+              // const result = tx({
+              //   to: params.address,
+              //   //value: utils.parseEther("0.001"),
+              //   data: writeContracts.ContributorContract.interface.encodeFunctionData("test()", []),
+              // });
+              // console.log(`The result is : ${JSON.stringify(await result)}`);
             }}
             // onClick={async () => {
             //   console.log(`the address is: ${params.address}`);
