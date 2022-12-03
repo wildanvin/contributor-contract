@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
-import { Address, Balance, Events } from "../components";
+import { Address, Balance, Events, FactoryEvents } from "../components";
 
 export default function ContractsList({
   purpose,
@@ -20,6 +20,26 @@ export default function ContractsList({
 
   return (
     <div>
+      {/*
+        📑 Maybe display a list of events?
+          (uncomment the event and emit line in YourContract.sol! )
+      */}
+      <Events
+        contracts={readContracts}
+        contractName="YourContract"
+        eventName="SetPurpose"
+        localProvider={localProvider}
+        mainnetProvider={mainnetProvider}
+        startBlock={1}
+      />
+      <FactoryEvents
+        contracts={readContracts}
+        contractName="Factory"
+        eventName="ContractCreated"
+        localProvider={localProvider}
+        mainnetProvider={mainnetProvider}
+        startBlock={1}
+      />
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
@@ -149,19 +169,6 @@ export default function ContractsList({
           </Button>
         </div>
       </div>
-
-      {/*
-        📑 Maybe display a list of events?
-          (uncomment the event and emit line in YourContract.sol! )
-      */}
-      <Events
-        contracts={readContracts}
-        contractName="YourContract"
-        eventName="SetPurpose"
-        localProvider={localProvider}
-        mainnetProvider={mainnetProvider}
-        startBlock={1}
-      />
 
       <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 256 }}>
         <Card>

@@ -63,7 +63,7 @@ function Home({
         console.log("📡 Transaction Update:", update);
         if (update && (update.status === "confirmed" || update.status === 1)) {
           console.log(" 🍾 Transaction " + update.hash + " finished!");
-          history.push("/exampleui");
+          history.push("/contractsList");
         }
       },
     );

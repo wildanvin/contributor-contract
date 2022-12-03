@@ -4,7 +4,7 @@ pragma solidity >=0.8.0 <0.9.0;
 import "./ContributorContract.sol";
 
 contract Factory {
-    event ContractCreated(address indexed ContractAddress);
+    event ContractCreated(address ContractAddress, string task, address Contributor);
 
     address payable public owner;
     ContributorContract[] public contractsArray;
@@ -36,7 +36,9 @@ contract Factory {
         contractsArray.push(contrib_contract);
 
         emit ContractCreated(
-            address(contractsArray[contractsArray.length - 1])
+            address(contractsArray[contractsArray.length - 1]),
+            _task,
+            _contributor
         );
     }
 
