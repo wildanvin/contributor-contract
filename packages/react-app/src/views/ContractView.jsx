@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
+import { useParams } from "react-router-dom";
+
 import { Address, Balance, Events } from "../components";
+
+import { Contract } from "../components";
 
 export default function ContractView({
   purpose,
@@ -15,11 +19,28 @@ export default function ContractView({
   tx,
   readContracts,
   writeContracts,
+  userSigner,
+  blockExplorer,
+  contractConfig,
 }) {
   const [newPurpose, setNewPurpose] = useState("loading...");
+  const params = useParams();
+
+  if (params.address == ":address") {
+    return <div>Go to contracts Lists</div>;
+  }
 
   return (
     <div>
+      {/* <Contract
+        name="ContributorContract"
+        price={price}
+        signer={userSigner}
+        provider={localProvider}
+        address={"0xCafac3dD18aC6c6e92c921884f9E4176737C052c"}
+        blockExplorer={blockExplorer}
+        contractConfig={contractConfig}
+      /> */}
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
@@ -36,28 +57,39 @@ export default function ContractView({
           <Button
             style={{ marginTop: 8 }}
             onClick={async () => {
-              /* look how you call setPurpose on your contract: */
-              /* notice how you pass a call back for tx updates too */
-              const result = tx(writeContracts.YourContract.setPurpose(newPurpose), update => {
-                console.log("📡 Transaction Update:", update);
-                if (update && (update.status === "confirmed" || update.status === 1)) {
-                  console.log(" 🍾 Transaction " + update.hash + " finished!");
-                  console.log(
-                    " ⛽️ " +
-                      update.gasUsed +
-                      "/" +
-                      (update.gasLimit || update.gas) +
-                      " @ " +
-                      parseFloat(update.gasPrice) / 1000000000 +
-                      " gwei",
-                  );
-                }
+              console.log(`the address is: ${params.address}`);
+              const result = tx({
+                to: params.address,
+                //value: utils.parseEther("0.001"),
+                data: writeContracts.ContributorContract.interface.encodeFunctionData("test()", []),
               });
-              console.log("awaiting metamask/web3 confirm result...", result);
-              console.log(await result);
+              console.log(`The result is : ${JSON.stringify(await result)}`);
             }}
+            // onClick={async () => {
+            //   console.log(`the address is: ${params.address}`);
+            //   /*
+            //   /* look how you call setPurpose on your contract: */
+            //   /* notice how you pass a call back for tx updates too */
+            //   const result = tx(writeContracts.YourContract.setPurpose(newPurpose), update => {
+            //     console.log("📡 Transaction Update:", update);
+            //     if (update && (update.status === "confirmed" || update.status === 1)) {
+            //       console.log(" 🍾 Transaction " + update.hash + " finished!");
+            //       console.log(
+            //         " ⛽️ " +
+            //           update.gasUsed +
+            //           "/" +
+            //           (update.gasLimit || update.gas) +
+            //           " @ " +
+            //           parseFloat(update.gasPrice) / 1000000000 +
+            //           " gwei",
+            //       );
+            //     }
+            //   });
+            //   console.log("awaiting metamask/web3 confirm result...", result);
+            //   console.log(await result);
+            // }}
           >
-            Set Purpose!
+            Get milestone
           </Button>
         </div>
         <Divider />

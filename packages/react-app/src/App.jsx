@@ -305,7 +305,7 @@ function App(props) {
           <Link to="/contractsList">Contracts List</Link>
         </Menu.Item>
         <Menu.Item key="/contractView">
-          <Link to="/contractView">Contract View</Link>
+          <Link to="/contractView/:address">Contract View</Link>
         </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
@@ -356,7 +356,7 @@ function App(props) {
             purpose={purpose}
           />
         </Route>
-        <Route path="/contractView">
+        <Route path="/contractView/:address">
           <ContractView
             address={address}
             userSigner={userSigner}
@@ -368,6 +368,8 @@ function App(props) {
             writeContracts={writeContracts}
             readContracts={readContracts}
             purpose={purpose}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
           />
         </Route>
         <Route exact path="/debug">

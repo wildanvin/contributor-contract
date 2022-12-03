@@ -75,6 +75,10 @@ contract ContributorContract {
         require(success, "Transfer failed");
     }
 
+    function test() public pure returns (string memory){
+        return "hey fren";
+    }
+
     receive() external payable {
         emit Deposit(msg.sender, msg.value, address(this).balance);
     }
