@@ -65,7 +65,7 @@ export default function ContractView({
 
     getBalance();
 
-    async function getContractInfo() {
+    const getContractInfo = async function () {
       try {
         const milestone = await contract.milestone();
         setMilestone(milestone);
@@ -76,7 +76,7 @@ export default function ContractView({
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
     getContractInfo();
   }, []);
@@ -112,32 +112,72 @@ export default function ContractView({
           >
             Get milestone
           </Button>
-
           <Divider />
-
           <div>
             Approved: {milestone.approved ? "YES" : "NO"} - Claimed: {milestone.claimed ? "YES" : "NO"}
           </div>
-
           <div>
             Contributor address: <Address address={contributorAddress} ensProvider={mainnetProvider} fontSize={16} />
           </div>
           <div>Task: {milestone.task}</div>
           <div>Reward: {utils.formatEther(milestone.value)} ETH</div>
-
           <div>Deadline: {ethers.BigNumber.from(milestone.time).toNumber()}</div>
-
           <div>Signed Document: {doc}</div>
-
           <Divider />
           <h3>Ubeswap Agent DAO</h3>
-          <Button style={{ marginTop: 8 }}>Increase Proceeds</Button>
-          <Button style={{ marginTop: 8 }}>Decrease Proceeds</Button>
-          <Button style={{ marginTop: 8 }}>Get funds back</Button>
-
+          <Button
+            style={{ marginTop: 8 }}
+            onClick={getContractInfo => {
+              tx({
+                to: params.address,
+                //value: utils.parseEther("0.001"),
+                data: writeContracts.ContributorContract.interface.encodeFunctionData("increaseProceeds()", []),
+              });
+            }}
+          >
+            Increase Proceeds
+          </Button>
+          <Button
+            style={{ marginTop: 8 }}
+            onClick={() => {
+              tx({
+                to: params.address,
+                //value: utils.parseEther("0.001"),
+                data: writeContracts.ContributorContract.interface.encodeFunctionData("decreaseProceeds()", []),
+              });
+            }}
+          >
+            Decrease Proceeds
+          </Button>
+          <br />
+          <Button
+            style={{ marginTop: 8 }}
+            onClick={() => {
+              tx({
+                to: params.address,
+                //value: utils.parseEther("0.001"),
+                data: writeContracts.ContributorContract.interface.encodeFunctionData("getAllFundsBack()", []),
+              });
+              /* this should throw an error about "no fallback nor receive function" until you add it */
+            }}
+          >
+            Get funds back
+          </Button>
           <Divider />
           <h3>Contributor</h3>
-          <Button style={{ marginTop: 8 }}>Withdraw Proceeds</Button>
+          <Button
+            style={{ marginTop: 8 }}
+            onClick={() => {
+              tx({
+                to: params.address,
+                //value: utils.parseEther("0.001"),
+                data: writeContracts.ContributorContract.interface.encodeFunctionData("withdrawProceeds()", []),
+              });
+              /* this should throw an error about "no fallback nor receive function" until you add it */
+            }}
+          >
+            Withdraw Proceeds
+          </Button>
         </div>
       </div>
     </div>

@@ -304,9 +304,9 @@ function App(props) {
         <Menu.Item key="/contractsList">
           <Link to="/contractsList">Contracts List</Link>
         </Menu.Item>
-        <Menu.Item key="/contractView">
+        {/* <Menu.Item key="/contractView">
           <Link to="/contractView/:address">Contract View</Link>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>

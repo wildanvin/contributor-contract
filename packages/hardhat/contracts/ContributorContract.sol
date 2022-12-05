@@ -67,8 +67,8 @@ contract ContributorContract {
 
     function withdrawProceeds() external onlyContributor {
         uint reward = proceeds[msg.sender];
-        require(reward > 0, "no reward");
         require(milestone.approved == true, "not approved");
+        require(reward > 0, "no reward");
         proceeds[msg.sender] = 0;
         milestone.claimed = true;
         (bool success, ) = payable(msg.sender).call{value: reward}("");
