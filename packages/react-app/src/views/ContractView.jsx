@@ -8,6 +8,7 @@ import { Address, Balance, Events } from "../components";
 
 import { abi } from "./helper/contractABI";
 import { useBalance } from "eth-hooks";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { ethers } = require("ethers");
 
@@ -127,24 +128,51 @@ export default function ContractView({
           <h3>Ubeswap Agent DAO</h3>
           <Button
             style={{ marginTop: 8 }}
-            onClick={getContractInfo => {
-              tx({
+            onClick={async () => {
+              const result = tx({
                 to: params.address,
                 //value: utils.parseEther("0.001"),
                 data: writeContracts.ContributorContract.interface.encodeFunctionData("increaseProceeds()", []),
               });
+              console.log(`This is the result: ${JSON.stringify(await result)}`);
+
+              const data = await result;
+
+              //console.log(`This is the nonce: ${data.nonce}`);
+              try {
+                if (await data.nonce) {
+                  setMilestone(milestone => ({
+                    ...milestone,
+                    approved: true,
+                  }));
+                }
+              } catch (error) {
+                console.log(error);
+              }
             }}
           >
             Increase Proceeds
           </Button>
           <Button
             style={{ marginTop: 8 }}
-            onClick={() => {
-              tx({
+            onClick={async () => {
+              const result = tx({
                 to: params.address,
                 //value: utils.parseEther("0.001"),
                 data: writeContracts.ContributorContract.interface.encodeFunctionData("decreaseProceeds()", []),
               });
+              const data = await result;
+
+              try {
+                if (await data.nonce) {
+                  setMilestone(milestone => ({
+                    ...milestone,
+                    approved: false,
+                  }));
+                }
+              } catch (error) {
+                console.log(error);
+              }
             }}
           >
             Decrease Proceeds
@@ -167,13 +195,24 @@ export default function ContractView({
           <h3>Contributor</h3>
           <Button
             style={{ marginTop: 8 }}
-            onClick={() => {
-              tx({
+            onClick={async () => {
+              const result = tx({
                 to: params.address,
                 //value: utils.parseEther("0.001"),
                 data: writeContracts.ContributorContract.interface.encodeFunctionData("withdrawProceeds()", []),
               });
-              /* this should throw an error about "no fallback nor receive function" until you add it */
+              const data = await result;
+
+              try {
+                if (await data.nonce) {
+                  setMilestone(milestone => ({
+                    ...milestone,
+                    claimed: true,
+                  }));
+                }
+              } catch (error) {
+                console.log(error);
+              }
             }}
           >
             Withdraw Proceeds
