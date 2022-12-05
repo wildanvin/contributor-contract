@@ -370,6 +370,7 @@ function App(props) {
             purpose={purpose}
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
+            localProviderPollingTime={localProviderPollingTime}
           />
         </Route>
         <Route exact path="/debug">

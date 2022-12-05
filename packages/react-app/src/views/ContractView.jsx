@@ -1,15 +1,13 @@
 import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { utils } from "ethers";
-import { SyncOutlined } from "@ant-design/icons";
 
 import { useParams } from "react-router-dom";
 
 import { Address, Balance, Events } from "../components";
 
-import { Contract } from "../components";
-
 import { abi } from "./helper/contractABI";
+import { useBalance } from "eth-hooks";
 
 const { ethers } = require("ethers");
 
@@ -24,42 +22,79 @@ export default function ContractView({
   readContracts,
   writeContracts,
   userSigner,
-  blockExplorer,
-  contractConfig,
+  localProviderPollingTime,
 }) {
+  const local = true;
   const [newPurpose, setNewPurpose] = useState("loading...");
+  //const [contractAddress, setContractAddress] = useState("");
+  const [contractBalance, setContractBalance] = useState(0);
+
+  const [doc, setDoc] = useState("");
+  const [contributorAddress, setContributorAddress] = useState("");
+
+  const [milestone, setMilestone] = useState({
+    task: "",
+    value: 0,
+    time: 0,
+    approved: false,
+    claimed: false,
+  });
+
   const params = useParams();
+
+  // if (params.address == ":address") {
+  //   return <div>Go to contracts Lists</div>;
+  // }
 
   const contract = new ethers.Contract(params.address, abi, userSigner);
 
-  if (params.address == ":address") {
-    return <div>Go to contracts Lists</div>;
-  }
+  useEffect(() => {
+    async function getBalance() {
+      try {
+        if (local) {
+          const balance = await localProvider.getBalance(params.address);
+        } else {
+          const balance = await mainnetProvider.getBalance(params.address);
+        }
+        const balance = await localProvider.getBalance(params.address);
+        setContractBalance(utils.formatEther(balance));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getBalance();
+
+    async function getContractInfo() {
+      try {
+        const milestone = await contract.milestone();
+        setMilestone(milestone);
+        const doc = await contract.doc();
+        setDoc(doc);
+        const contributor = await contract.contributor();
+        setContributorAddress(contributor);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getContractInfo();
+  }, []);
 
   return (
     <div>
-      {/* <Contract
-        name="ContributorContract"
-        price={price}
-        signer={userSigner}
-        provider={localProvider}
-        address={"0xCafac3dD18aC6c6e92c921884f9E4176737C052c"}
-        blockExplorer={blockExplorer}
-        contractConfig={contractConfig}
-      /> */}
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
-      <div style={{ border: "1px solid #cccccc", padding: 16, width: 500, margin: "auto", marginTop: 64 }}>
-        <h2>Contract View:</h2>
-        <h4>purpose: {purpose}</h4>
+      <div style={{ border: "1px solid #cccccc", padding: 16, width: "70%", margin: "auto", marginTop: 64 }}>
+        <h2>Contributor Contract at:</h2>
+
+        <Address address={params.address} ensProvider={mainnetProvider} fontSize={16} />
+        <h2>Balance: {contractBalance} ETH</h2>
+        <Balance address={params.address} provider={localProvider} price={price} />
+
         <Divider />
         <div style={{ margin: 8 }}>
-          <Input
-            onChange={e => {
-              setNewPurpose(e.target.value);
-            }}
-          />
           <Button
             style={{ marginTop: 8 }}
             onClick={async () => {
@@ -73,195 +108,37 @@ export default function ContractView({
               } catch (error) {
                 console.log(error);
               }
-              // const result = tx({
-              //   to: params.address,
-              //   //value: utils.parseEther("0.001"),
-              //   data: writeContracts.ContributorContract.interface.encodeFunctionData("test()", []),
-              // });
-              // console.log(`The result is : ${JSON.stringify(await result)}`);
             }}
-            // onClick={async () => {
-            //   console.log(`the address is: ${params.address}`);
-            //   /*
-            //   /* look how you call setPurpose on your contract: */
-            //   /* notice how you pass a call back for tx updates too */
-            //   const result = tx(writeContracts.YourContract.setPurpose(newPurpose), update => {
-            //     console.log("📡 Transaction Update:", update);
-            //     if (update && (update.status === "confirmed" || update.status === 1)) {
-            //       console.log(" 🍾 Transaction " + update.hash + " finished!");
-            //       console.log(
-            //         " ⛽️ " +
-            //           update.gasUsed +
-            //           "/" +
-            //           (update.gasLimit || update.gas) +
-            //           " @ " +
-            //           parseFloat(update.gasPrice) / 1000000000 +
-            //           " gwei",
-            //       );
-            //     }
-            //   });
-            //   console.log("awaiting metamask/web3 confirm result...", result);
-            //   console.log(await result);
-            // }}
           >
             Get milestone
           </Button>
-        </div>
-        <Divider />
-        Your Address:
-        <Address address={address} ensProvider={mainnetProvider} fontSize={16} />
-        <Divider />
-        ENS Address Example:
-        <Address
-          address="0x34aA3F359A9D614239015126635CE7732c18fDF3" /* this will show as austingriffith.eth */
-          ensProvider={mainnetProvider}
-          fontSize={16}
-        />
-        <Divider />
-        {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
-        <div>OR</div>
-        <Balance address={address} provider={localProvider} price={price} />
-        <Divider />
-        <div>🐳 Example Whale Balance:</div>
-        <Balance balance={utils.parseEther("1000")} provider={localProvider} price={price} />
-        <Divider />
-        {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
-        <Divider />
-        Your Contract Address:
-        <Address
-          address={readContracts && readContracts.YourContract ? readContracts.YourContract.address : null}
-          ensProvider={mainnetProvider}
-          fontSize={16}
-        />
-        <Divider />
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* look how you call setPurpose on your contract: */
-              tx(writeContracts.YourContract.setPurpose("🍻 Cheers"));
-            }}
-          >
-            Set Purpose to &quot;🍻 Cheers&quot;
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /*
-              you can also just craft a transaction and send it to the tx() transactor
-              here we are sending value straight to the contract's address:
-            */
-              tx({
-                to: writeContracts.YourContract.address,
-                value: utils.parseEther("0.001"),
-              });
-              /* this should throw an error about "no fallback nor receive function" until you add it */
-            }}
-          >
-            Send Value
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* look how we call setPurpose AND send some value along */
-              tx(
-                writeContracts.YourContract.setPurpose("💵 Paying for this one!", {
-                  value: utils.parseEther("0.001"),
-                }),
-              );
-              /* this will fail until you make the setPurpose function payable */
-            }}
-          >
-            Set Purpose With Value
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* you can also just craft a transaction and send it to the tx() transactor */
-              tx({
-                to: writeContracts.YourContract.address,
-                value: utils.parseEther("0.001"),
-                data: writeContracts.YourContract.interface.encodeFunctionData("setPurpose(string)", [
-                  "🤓 Whoa so 1337!",
-                ]),
-              });
-              /* this should throw an error about "no fallback nor receive function" until you add it */
-            }}
-          >
-            Another Example
-          </Button>
-        </div>
-      </div>
 
-      {/*
-        📑 Maybe display a list of events?
-          (uncomment the event and emit line in YourContract.sol! )
-      */}
-      <Events
-        contracts={readContracts}
-        contractName="YourContract"
-        eventName="SetPurpose"
-        localProvider={localProvider}
-        mainnetProvider={mainnetProvider}
-        startBlock={1}
-      />
+          <Divider />
 
-      <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 256 }}>
-        <Card>
-          Check out all the{" "}
-          <a
-            href="https://github.com/austintgriffith/scaffold-eth/tree/master/packages/react-app/src/components"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📦 components
-          </a>
-        </Card>
-
-        <Card style={{ marginTop: 32 }}>
           <div>
-            There are tons of generic components included from{" "}
-            <a href="https://ant.design/components/overview/" target="_blank" rel="noopener noreferrer">
-              🐜 ant.design
-            </a>{" "}
-            too!
+            Approved: {milestone.approved ? "YES" : "NO"} - Claimed: {milestone.claimed ? "YES" : "NO"}
           </div>
 
-          <div style={{ marginTop: 8 }}>
-            <Button type="primary">Buttons</Button>
+          <div>
+            Contributor address: <Address address={contributorAddress} ensProvider={mainnetProvider} fontSize={16} />
           </div>
+          <div>Task: {milestone.task}</div>
+          <div>Reward: {utils.formatEther(milestone.value)} ETH</div>
 
-          <div style={{ marginTop: 8 }}>
-            <SyncOutlined spin /> Icons
-          </div>
+          <div>Deadline: {ethers.BigNumber.from(milestone.time).toNumber()}</div>
 
-          <div style={{ marginTop: 8 }}>
-            Date Pickers?
-            <div style={{ marginTop: 2 }}>
-              <DatePicker onChange={() => {}} />
-            </div>
-          </div>
+          <div>Signed Document: {doc}</div>
 
-          <div style={{ marginTop: 32 }}>
-            <Slider range defaultValue={[20, 50]} onChange={() => {}} />
-          </div>
+          <Divider />
+          <h3>Ubeswap Agent DAO</h3>
+          <Button style={{ marginTop: 8 }}>Increase Proceeds</Button>
+          <Button style={{ marginTop: 8 }}>Decrease Proceeds</Button>
+          <Button style={{ marginTop: 8 }}>Get funds back</Button>
 
-          <div style={{ marginTop: 32 }}>
-            <Switch defaultChecked onChange={() => {}} />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Progress percent={50} status="active" />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Spin />
-          </div>
-        </Card>
+          <Divider />
+          <h3>Contributor</h3>
+          <Button style={{ marginTop: 8 }}>Withdraw Proceeds</Button>
+        </div>
       </div>
     </div>
   );

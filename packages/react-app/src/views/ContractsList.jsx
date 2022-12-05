@@ -24,14 +24,14 @@ export default function ContractsList({
         📑 Maybe display a list of events?
           (uncomment the event and emit line in YourContract.sol! )
       */}
-      <Events
+      {/* <Events
         contracts={readContracts}
         contractName="YourContract"
         eventName="SetPurpose"
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
-      />
+      /> */}
       <FactoryEvents
         contracts={readContracts}
         contractName="Factory"

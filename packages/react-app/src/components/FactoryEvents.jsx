@@ -41,11 +41,9 @@ export default function FactoryEvents({
           return (
             <List.Item key={item.blockNumber + "_" + item.args.sender + "_"}>
               <div style={{ fontSize: 18, fontWeight: 900 }}>Task: {item.args[1]}</div>
-              Deployed at:
-              <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
+              Deployed at: <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
               <br />
-              Contributor:
-              <Address address={item.args[2]} ensProvider={mainnetProvider} fontSize={16} />
+              Contributor: <Address address={item.args[2]} ensProvider={mainnetProvider} fontSize={16} />
               <br />
               <Button style={{ marginTop: 8 }} onClick={async () => {}}>
                 <Link to={`/contractView/${item.args[0]}`}>View Details</Link>
