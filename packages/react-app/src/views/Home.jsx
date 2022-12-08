@@ -4,8 +4,27 @@ import React, { useState } from "react";
 
 import { Link, Redirect, useHistory } from "react-router-dom";
 
-import { Button, Card, Divider, Form, Input } from "antd";
+import { Button, Card, Divider, Form, Input, Upload } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { Address, Balance, Events } from "../components";
+
+import { create } from "ipfs-http-client";
+import { Buffer } from "buffer";
+
+/* configure Infura auth settings */
+const projectId = "2IWlNF0pxQ0tyk9NJ2ZdJfY2R0d";
+const projectSecret = "ed412e1c5b0dfe4b0d29e8b20a75da09";
+const auth = "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
+
+/* create the client */
+const client = create({
+  host: "ipfs.infura.io",
+  port: 5001,
+  protocol: "https",
+  headers: {
+    authorization: auth,
+  },
+});
 
 /**
  * web3 props can be passed from '../App.jsx' into your local view component for use
@@ -67,15 +86,25 @@ function Home({
         }
       },
     );
-    // let createClassroomTx = await classroomFactory.methods
-    //   .createClassroom(formData.sessions)
-    //   .send({ from: props.accounts[0] })
-    //   .on('receipt', async function (receipt) {
-    //     alert(`Classroom created successfully`)
-    //   })
+  };
 
-    //navigate(`/classroom/${idAddress}`);
-    //return <Redirect to="/exampleui" />;
+  const submitToIPFS = async e => {
+    //const file = e.fileList[0];
+    const file = e.target.files[0];
+    console.log(`the file ?? : ${JSON.stringify(file)}`);
+    try {
+      const added = await client.add(file);
+      //const url = `https://infura-ipfs.io/ipfs/${added.path}`;
+      //updateFileUrl(url);
+      console.log("IPFS URI: ", added);
+      setFormData(prevState => ({
+        ...prevState,
+        [e.target.id]: added.path,
+      }));
+      console.log(formData);
+    } catch (error) {
+      console.log("Error uploading file: ", error);
+    }
   };
 
   return (
@@ -145,7 +174,7 @@ function Home({
                 },
               ]}
             >
-              <Input id="doc" value={doc} onChange={onMutate} placeholder="CID hash" />
+              <Input disabled placeholder={doc} />
             </Form.Item>
 
             <Form.Item
@@ -185,6 +214,22 @@ function Home({
             >
               <Input id="time" value={time} onChange={onMutate} placeholder="30 seconds" />
             </Form.Item>
+
+            <Form.Item label="Upload" valuePropName="fileList">
+              <Upload onChange={submitToIPFS} type="file" listType="picture-card">
+                <div>
+                  <PlusOutlined />
+                  <div
+                    style={{
+                      marginTop: 8,
+                    }}
+                  >
+                    Upload
+                  </div>
+                </div>
+              </Upload>
+            </Form.Item>
+            <input id="doc" type="file" onChange={submitToIPFS} />
 
             <Form.Item
               wrapperCol={{
