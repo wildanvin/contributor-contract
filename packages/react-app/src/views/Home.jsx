@@ -89,9 +89,14 @@ function Home({
   };
 
   const submitToIPFS = async e => {
-    //const file = e.fileList[0];
+    //const file = e.target.files[0];
+    //console.log(`the file ?? : ${JSON.stringify(e.target)}`);
+
+    //const file = e.file;
     const file = e.target.files[0];
+
     console.log(`the file ?? : ${JSON.stringify(file)}`);
+
     try {
       const added = await client.add(file);
       //const url = `https://infura-ipfs.io/ipfs/${added.path}`;
@@ -216,20 +221,19 @@ function Home({
             </Form.Item>
 
             <Form.Item label="Upload" valuePropName="fileList">
-              <Upload onChange={submitToIPFS} type="file" listType="picture-card">
-                <div>
-                  <PlusOutlined />
-                  <div
-                    style={{
-                      marginTop: 8,
-                    }}
-                  >
-                    Upload
-                  </div>
-                </div>
-              </Upload>
+              <label htmlFor="doc">
+                {" "}
+                <input
+                  /*
+                  style={{
+                    display: "none",
+                  }}*/
+                  onChange={submitToIPFS}
+                  id="doc"
+                  type="file"
+                />
+              </label>
             </Form.Item>
-            <input id="doc" type="file" onChange={submitToIPFS} />
 
             <Form.Item
               wrapperCol={{
@@ -237,127 +241,18 @@ function Home({
                 span: 16,
               }}
             >
+              <br />
               <Button onClick={onClick} type="primary" htmlType="submit">
-                Submit
+                Create Contract
               </Button>
             </Form.Item>
           </Form>
-
-          <section className="form">
-            <form>
-              {/* <div className="form-group">
-                <button onClick={onClick} className="btn btn-block">
-                  Create Classroom
-                </button>
-                <br />
-                <br />
-                <br />
-              </div> */}
-            </form>
-          </section>
         </Card>
       </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>📝</span>
-        This Is Your App Home. You can start editing it in{" "}
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          packages/react-app/src/views/Home.jsx
-        </span>
-      </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>✏️</span>
-        Edit your smart contract{" "}
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          YourContract.sol
-        </span>{" "}
-        in{" "}
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          packages/hardhat/contracts
-        </span>
-      </div>
-      {!purpose ? (
-        <div style={{ margin: 32 }}>
-          <span style={{ marginRight: 8 }}>👷‍♀️</span>
-          You haven't deployed your contract yet, run
-          <span
-            className="highlight"
-            style={{
-              marginLeft: 4,
-              /* backgroundColor: "#f9f9f9", */ padding: 4,
-              borderRadius: 4,
-              fontWeight: "bolder",
-            }}
-          >
-            yarn chain
-          </span>{" "}
-          and{" "}
-          <span
-            className="highlight"
-            style={{
-              marginLeft: 4,
-              /* backgroundColor: "#f9f9f9", */ padding: 4,
-              borderRadius: 4,
-              fontWeight: "bolder",
-            }}
-          >
-            yarn deploy
-          </span>{" "}
-          to deploy your first contract!
-        </div>
-      ) : (
-        <div style={{ margin: 32 }}>
-          <span style={{ marginRight: 8 }}>🤓</span>
-          The "purpose" variable from your contract is{" "}
-          <span
-            className="highlight"
-            style={{
-              marginLeft: 4,
-              /* backgroundColor: "#f9f9f9", */ padding: 4,
-              borderRadius: 4,
-              fontWeight: "bolder",
-            }}
-          >
-            {purpose}
-          </span>
-        </div>
-      )}
-
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>🤖</span>
-        An example prop of your balance{" "}
-        <span style={{ fontWeight: "bold", color: "green" }}>({ethers.utils.formatEther(yourLocalBalance)})</span> was
-        passed into the
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          Home.jsx
-        </span>{" "}
-        component from
-        <span
-          className="highlight"
-          style={{ marginLeft: 4, /* backgroundColor: "#f9f9f9", */ padding: 4, borderRadius: 4, fontWeight: "bolder" }}
-        >
-          App.jsx
-        </span>
-      </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>💭</span>
-        Check out the <Link to="/hints">"Hints"</Link> tab for more tips.
-      </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>🛠</span>
-        Tinker with your smart contract using the <Link to="/debug">"Debug Contract"</Link> tab.
-      </div>
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 }
