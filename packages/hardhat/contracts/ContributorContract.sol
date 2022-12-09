@@ -48,14 +48,14 @@ contract ContributorContract {
         milestone.claimed = false;
     }
 
-    function increaseProceeds() public onlyOwner {
-        require(block.timestamp >= milestone.time);
+    function approve() public onlyOwner {
+        require(block.timestamp >= milestone.time, "not time yet");
         milestone.approved = true;
         proceeds[contributor] = milestone.value;
     }
 
-    function decreaseProceeds() public onlyOwner {
-        require(block.timestamp >= milestone.time);
+    function disapprove() public onlyOwner {
+        require(block.timestamp >= milestone.time, "not time yet");
         milestone.approved = false;
         proceeds[contributor] = 0;
     }

@@ -132,7 +132,7 @@ export default function ContractView({
               const result = tx({
                 to: params.address,
                 //value: utils.parseEther("0.001"),
-                data: writeContracts.ContributorContract.interface.encodeFunctionData("increaseProceeds()", []),
+                data: writeContracts.ContributorContract.interface.encodeFunctionData("approve()", []),
               });
               console.log(`This is the result: ${JSON.stringify(await result)}`);
 
@@ -151,7 +151,7 @@ export default function ContractView({
               }
             }}
           >
-            Increase Proceeds
+            Approve
           </Button>
           <Button
             style={{ marginTop: 8 }}
@@ -159,7 +159,7 @@ export default function ContractView({
               const result = tx({
                 to: params.address,
                 //value: utils.parseEther("0.001"),
-                data: writeContracts.ContributorContract.interface.encodeFunctionData("decreaseProceeds()", []),
+                data: writeContracts.ContributorContract.interface.encodeFunctionData("disapprove()", []),
               });
               const data = await result;
 
@@ -175,7 +175,7 @@ export default function ContractView({
               }
             }}
           >
-            Decrease Proceeds
+            Disapprove
           </Button>
           <br />
           <Button

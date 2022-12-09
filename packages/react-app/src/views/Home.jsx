@@ -1,19 +1,20 @@
-import { useContractReader } from "eth-hooks";
 import { ethers, utils } from "ethers";
 import React, { useState } from "react";
 
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { Button, Card, Divider, Form, Input, Upload } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { Address, Balance, Events } from "../components";
 
 import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
 
+require("dotenv").config();
+console.log(`the process env is... ${JSON.stringify(process.env)}`);
+
 /* configure Infura auth settings */
-const projectId = "2IWlNF0pxQ0tyk9NJ2ZdJfY2R0d";
-const projectSecret = "ed412e1c5b0dfe4b0d29e8b20a75da09";
+const projectId = process.env.REACT_APP_IPFS_PROJECT_ID;
+const projectSecret = process.env.REACT_APP_IPFS_PROJECT_SECRET;
 const auth = "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
 
 /* create the client */
@@ -43,10 +44,6 @@ function Home({
   writeContracts,
   owner,
 }) {
-  // you can also use hooks locally in your component of choice
-  // in this case, let's keep track of 'purpose' variable from our contract
-  const purpose = useContractReader(readContracts, "YourContract", "purpose");
-
   const [formData, setFormData] = useState({
     contributor: "",
     doc: "",
@@ -56,12 +53,10 @@ function Home({
   });
 
   const { contributor, doc, task, value, time } = formData;
-  //const navigate = useNavigate();
+
   const history = useHistory();
 
   const onMutate = e => {
-    // Text/Booleans/Numbers
-
     setFormData(prevState => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -89,24 +84,15 @@ function Home({
   };
 
   const submitToIPFS = async e => {
-    //const file = e.target.files[0];
-    //console.log(`the file ?? : ${JSON.stringify(e.target)}`);
-
-    //const file = e.file;
     const file = e.target.files[0];
-
-    console.log(`the file ?? : ${JSON.stringify(file)}`);
 
     try {
       const added = await client.add(file);
-      //const url = `https://infura-ipfs.io/ipfs/${added.path}`;
-      //updateFileUrl(url);
-      console.log("IPFS URI: ", added);
+
       setFormData(prevState => ({
         ...prevState,
         [e.target.id]: added.path,
       }));
-      console.log(formData);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
