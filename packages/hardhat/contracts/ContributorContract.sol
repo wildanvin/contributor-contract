@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+/// @title Contributor Contract
+/// @author wildanvin
+/// @notice The Dao and the contributor interact with instances of this contract in order to approve payments (Dao) and receive payments (contributor)
 contract ContributorContract {
     event Deposit(address indexed sender, uint amount, uint balance);
 
@@ -28,6 +31,13 @@ contract ContributorContract {
         _;
     }
 
+    /// @param _owner The owner of the contract. The Dao in this case
+    /// @param _contributor Address of contributor
+    /// @param _doc CID hash of the signed docment
+    /// @param _task Brief description of the task to complete
+    /// @param _value The reward for the contributor
+    /// @param _time The amount of time the contributor has to complete the task. Right now the time is in seconds
+    /// @notice These parameters are passed when the Dao creates the contract using the Factory contract
     constructor(
         address payable _owner,
         address payable _contributor,
@@ -36,7 +46,6 @@ contract ContributorContract {
         uint _value,
         uint _time
     ) {
-        // Set the transaction sender as the owner of the contract.
         owner = _owner;
         contributor = _contributor;
         doc = _doc;
@@ -48,6 +57,8 @@ contract ContributorContract {
         milestone.claimed = false;
     }
 
+    /// @notice The Dao can only call this function after the deadline
+    /// @notice The proceeds mapping is updated accordingly
     function approve() public onlyOwner {
         require(block.timestamp >= milestone.time, "not time yet");
         milestone.approved = true;
@@ -65,6 +76,7 @@ contract ContributorContract {
         require(sent, "Failed to send Ether");
     }
 
+    /// @notice The proceeds mapping is updated to 0 before sending the reward.
     function withdrawProceeds() external onlyContributor {
         uint reward = proceeds[msg.sender];
         require(milestone.approved == true, "not approved");

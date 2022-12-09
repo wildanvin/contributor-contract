@@ -3,6 +3,9 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./ContributorContract.sol";
 
+/// @title Factory Contract
+/// @author wildanvin
+/// @notice Only the owner can create more contracts
 contract Factory {
     event ContractCreated(address ContractAddress, string task, address Contributor);
 
@@ -18,6 +21,13 @@ contract Factory {
         owner = payable(msg.sender);
     }
 
+    /// @notice The owner can create contracts for contributors with this function
+    /// @notice How the owner address is passed when creating a contract with the "new" keyword
+    /// @param _contributor Address of contributor
+    /// @param _doc CID hash of the signed docment
+    /// @param _task Brief description of the task to complete
+    /// @param _value The reward for the contributor
+    /// @param _time The amount of time the contributor has to complete the task. Right now the time is in seconds
     function createContract(
         address payable _contributor,
         string memory _doc,
@@ -42,6 +52,7 @@ contract Factory {
         );
     }
 
+    /// @notice Right now everyone can claim ownership for demo purposes
     function claimOwnership() public {
         owner = payable(msg.sender);
     }
