@@ -75,6 +75,8 @@ export default function ContractView({
     getContractInfo();
   }, []);
 
+  const date = new Date(ethers.BigNumber.from(milestone.time).toNumber() * 1000);
+
   return (
     <div>
       <div style={{ border: "1px solid #cccccc", padding: 16, width: "70%", margin: "auto", marginTop: 64 }}>
@@ -102,7 +104,8 @@ export default function ContractView({
             <b>Reward:</b> {utils.formatEther(milestone.value)} ETH
           </div>
           <div>
-            <b>Deadline:</b> {ethers.BigNumber.from(milestone.time).toNumber()}
+            <b>Deadline:</b> {date.toLocaleDateString("en-GB")}
+            {"-"} {date.toLocaleTimeString("it-IT")}
           </div>
 
           <Button type="link">
