@@ -13,8 +13,6 @@ export default function ContractsList({
   readContracts,
   writeContracts,
 }) {
-  const [newPurpose, setNewPurpose] = useState("loading...");
-
   return (
     <div>
       <FactoryEvents
