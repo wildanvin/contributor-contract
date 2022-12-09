@@ -306,7 +306,7 @@ function App(props) {
         </Menu.Item>
         {/* <Menu.Item key="/contractView">
           <Link to="/contractView/:address">Contract View</Link>
-        </Menu.Item> */}
+        </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>
@@ -315,7 +315,7 @@ function App(props) {
         </Menu.Item>
         <Menu.Item key="/exampleui">
           <Link to="/exampleui">ExampleUI</Link>
-        </Menu.Item>
+        </Menu.Item> */}
 
         {/* <Menu.Item key="/mainnetdai">
           <Link to="/mainnetdai">Mainnet DAI</Link>

@@ -1,14 +1,12 @@
-import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
+import { Button, Divider } from "antd";
 import React, { useState, useEffect } from "react";
 import { utils } from "ethers";
 
 import { useParams } from "react-router-dom";
 
-import { Address, Balance, Events } from "../components";
+import { Address, Balance } from "../components";
 
 import { abi } from "./helper/contractABI";
-import { useBalance } from "eth-hooks";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { ethers } = require("ethers");
 
@@ -25,10 +23,9 @@ export default function ContractView({
   userSigner,
   localProviderPollingTime,
 }) {
-  const local = true;
-  const [newPurpose, setNewPurpose] = useState("loading...");
-  //const [contractAddress, setContractAddress] = useState("");
-  const [contractBalance, setContractBalance] = useState(0);
+  //const local = true;
+
+  // const [contractBalance, setContractBalance] = useState(0);
 
   const [doc, setDoc] = useState("");
   const [contributorAddress, setContributorAddress] = useState("");
@@ -43,28 +40,24 @@ export default function ContractView({
 
   const params = useParams();
 
-  // if (params.address == ":address") {
-  //   return <div>Go to contracts Lists</div>;
-  // }
-
   const contract = new ethers.Contract(params.address, abi, userSigner);
 
   useEffect(() => {
-    async function getBalance() {
-      try {
-        if (local) {
-          const balance = await localProvider.getBalance(params.address);
-        } else {
-          const balance = await mainnetProvider.getBalance(params.address);
-        }
-        const balance = await localProvider.getBalance(params.address);
-        setContractBalance(utils.formatEther(balance));
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    // async function getBalance() {
+    //   try {
+    //     if (local) {
+    //       const balance = await localProvider.getBalance(params.address);
+    //     } else {
+    //       const balance = await mainnetProvider.getBalance(params.address);
+    //     }
+    //     const balance = await localProvider.getBalance(params.address);
+    //     setContractBalance(utils.formatEther(balance));
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
-    getBalance();
+    // getBalance();
 
     const getContractInfo = async function () {
       try {
@@ -84,46 +77,39 @@ export default function ContractView({
 
   return (
     <div>
-      {/*
-        ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
-      */}
       <div style={{ border: "1px solid #cccccc", padding: 16, width: "70%", margin: "auto", marginTop: 64 }}>
         <h2>Contributor Contract at:</h2>
 
         <Address address={params.address} ensProvider={mainnetProvider} fontSize={16} />
-        <h2>Balance: {contractBalance} ETH</h2>
+        {/* <h2>Balance: {contractBalance} ETH</h2> */}
+        <br />
         <Balance address={params.address} provider={localProvider} price={price} />
 
         <Divider />
         <div style={{ margin: 8 }}>
-          <Button
-            style={{ marginTop: 8 }}
-            onClick={async () => {
-              console.log(`the address is: ${params.address}`);
+          <div>
+            <b>Approved:</b> {milestone.approved ? "YES" : "NO"} - <b>Claimed:</b> {milestone.claimed ? "YES" : "NO"}
+          </div>
+          <br />
+          <div>
+            <b>Contributor address:</b>{" "}
+            <Address address={contributorAddress} ensProvider={mainnetProvider} fontSize={16} />
+          </div>
+          <div>
+            <b>Task:</b> {milestone.task}
+          </div>
+          <div>
+            <b>Reward:</b> {utils.formatEther(milestone.value)} ETH
+          </div>
+          <div>
+            <b>Deadline:</b> {ethers.BigNumber.from(milestone.time).toNumber()}
+          </div>
 
-              try {
-                const txResponse = await contract.milestone();
-                //await listenForTransactionMine(txResponse, provider);
-                console.log("Done!");
-                console.log(txResponse);
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-          >
-            Get milestone
+          <Button type="link">
+            <a rel="noreferrer" href={`https://ipfs.io/ipfs/${doc}`} target="_blank">
+              Signed Document
+            </a>
           </Button>
-          <Divider />
-          <div>
-            Approved: {milestone.approved ? "YES" : "NO"} - Claimed: {milestone.claimed ? "YES" : "NO"}
-          </div>
-          <div>
-            Contributor address: <Address address={contributorAddress} ensProvider={mainnetProvider} fontSize={16} />
-          </div>
-          <div>Task: {milestone.task}</div>
-          <div>Reward: {utils.formatEther(milestone.value)} ETH</div>
-          <div>Deadline: {ethers.BigNumber.from(milestone.time).toNumber()}</div>
-          <div>Signed Document: {doc}</div>
           <Divider />
           <h3>Ubeswap Agent DAO</h3>
           <Button
@@ -134,11 +120,9 @@ export default function ContractView({
                 //value: utils.parseEther("0.001"),
                 data: writeContracts.ContributorContract.interface.encodeFunctionData("approve()", []),
               });
-              console.log(`This is the result: ${JSON.stringify(await result)}`);
 
               const data = await result;
 
-              //console.log(`This is the nonce: ${data.nonce}`);
               try {
                 if (await data.nonce) {
                   setMilestone(milestone => ({
@@ -219,6 +203,13 @@ export default function ContractView({
           </Button>
         </div>
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 }

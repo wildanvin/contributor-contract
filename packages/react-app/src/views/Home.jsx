@@ -1,10 +1,10 @@
-import { ethers, utils } from "ethers";
+import { utils } from "ethers";
 import React, { useState } from "react";
 
 import { useHistory } from "react-router-dom";
 
-import { Button, Card, Divider, Form, Input, Upload } from "antd";
-import { Address, Balance, Events } from "../components";
+import { Button, Card, Divider, Form, Input } from "antd";
+import { Address } from "../components";
 
 import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
