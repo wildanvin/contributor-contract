@@ -1,26 +1,48 @@
-# 🏗 Scaffold-ETH
+# 🤝 Ubeswap Contributor Management
 
-> everything you need to build on Ethereum! 🚀
+This is a project for the Ubeswap hackaton, it is a dapp that lets a DAO distribute grants to contributors. The Dao can approve, cancel the payment or get the funds back if milestones are not met. The [Ubeswap DAO Contributor Agreement](https://docs.google.com/document/d/101BINrXZhpJU148X-zO9kl7JDqHHZqBmddjm9ByohxQ/edit?usp=sharing) is stored in IPFS and its CID is stored in the smart contract.
 
-🧪 Quickly experiment with Solidity using a frontend that adapts to your smart contract:
+There are two smart contracts in this dapp: `Factory.sol` and `ContributorContract.sol`. The basic flow would be as follow:
 
-![image](https://user-images.githubusercontent.com/2653167/124158108-c14ca380-da56-11eb-967e-69cde37ca8eb.png)
+1. Through the front end, the DAO will interact with the `Factory` contract to create different instances of a `ContributorContract`.
+2. The front end will display a list with all the `ContributorContract`s created.
+3. After the deadline the DAO can approve, disapprove, or get the funds back from the `ContributorContract`.
+4. If the `ContributorContract` gets approved by the DAO, the contributor can claim the reward.
 
+# Live demo
 
-# 🏄‍♂️ Quick Start
+I deployed to goerli testnet. You can interact with the dapp in this link.
+Here is a demo video on youtube.
+The contracts are deployed at this addresses:
 
-Prerequisites: [Node (v16 LTS)](https://nodejs.org/en/download/) plus [Yarn (v1.x)](https://classic.yarnpkg.com/en/docs/install/) and [Git](https://git-scm.com/downloads)
+# Directory Structure
 
-> clone/fork 🏗 scaffold-eth:
+Scaffold-Eth provides a lot of nice functionality that I did not use for this project. The folders that contain all the app functionaliy are:
+
+- `packages/react-app`: contains all the front end in react.
+- `packages/hardhat`: contains the solidity contracts and deploy scripts.
+
+Regarding the front end, the important components are located at:
+
+- `packages/react-app/src/views/ContractList`: this componenet displays the contracts created by the DAO.
+- `packages/react-app/src/views/components/FactoryEvents`: this is a component that I modified slightly from the `Events` component provided by Scaffold-Eth.
+- `packages/react-app/src/views/Home`: it shows the interface to the DAO agent to create more contracts.
+- `packages/react-app/src/views/ContractView`: it displays the info of each created contract like deadline, contributor address, reward, etc.
+
+# Run the project locally
+
+One of the nice things of Scaffold-Eth is that is very easy to run a project locally, as prerequisites you will need [Node (v16 LTS)](https://nodejs.org/en/download/) plus [Yarn (v1.x)](https://classic.yarnpkg.com/en/docs/install/) and [Git](https://git-scm.com/downloads)
+
+> clone/fork:
 
 ```bash
-git clone https://github.com/scaffold-eth/scaffold-eth.git
+git clone https://github.com/wildanvin/contributor-contract
 ```
 
 > install and start your 👷‍ Hardhat chain:
 
 ```bash
-cd scaffold-eth
+cd contributor-contract
 yarn install
 yarn chain
 ```
@@ -28,95 +50,28 @@ yarn chain
 > in a second terminal window, start your 📱 frontend:
 
 ```bash
-cd scaffold-eth
+cd contributor-contract
 yarn start
 ```
 
 > in a third terminal window, 🛰 deploy your contract:
 
 ```bash
-cd scaffold-eth
+cd contributor-contract
 yarn deploy
 ```
 
-🔏 Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-
-📝 Edit your frontend `App.jsx` in `packages/react-app/src`
-
-💼 Edit your deployment scripts in `packages/hardhat/deploy`
-
 📱 Open http://localhost:3000 to see the app
 
-# 📚 Documentation
+# Deploy the project to a testnet
 
-Documentation, tutorials, challenges, and many more resources, visit: [docs.scaffoldeth.io](https://docs.scaffoldeth.io)
+Whe deplying remember to change the block number for indexing events in `FactoryEvents.jsx`
 
+# For the future:
 
-# 🍦 Other Flavors
-- [scaffold-eth-typescript](https://github.com/scaffold-eth/scaffold-eth-typescript)
-- [scaffold-eth-tailwind](https://github.com/stevenpslade/scaffold-eth-tailwind)
-- [scaffold-nextjs](https://github.com/scaffold-eth/scaffold-eth/tree/scaffold-nextjs)
-- [scaffold-chakra](https://github.com/scaffold-eth/scaffold-eth/tree/chakra-ui)
-- [eth-hooks](https://github.com/scaffold-eth/eth-hooks)
-- [eth-components](https://github.com/scaffold-eth/eth-components)
-- [scaffold-eth-expo](https://github.com/scaffold-eth/scaffold-eth-expo)
-- [scaffold-eth-truffle](https://github.com/trufflesuite/scaffold-eth)
-
-
-
-# 🔭 Learning Solidity
-
-📕 Read the docs: https://docs.soliditylang.org
-
-📚 Go through each topic from [solidity by example](https://solidity-by-example.org) editing `YourContract.sol` in **🏗 scaffold-eth**
-
-- [Primitive Data Types](https://solidity-by-example.org/primitives/)
-- [Mappings](https://solidity-by-example.org/mapping/)
-- [Structs](https://solidity-by-example.org/structs/)
-- [Modifiers](https://solidity-by-example.org/function-modifier/)
-- [Events](https://solidity-by-example.org/events/)
-- [Inheritance](https://solidity-by-example.org/inheritance/)
-- [Payable](https://solidity-by-example.org/payable/)
-- [Fallback](https://solidity-by-example.org/fallback/)
-
-📧 Learn the [Solidity globals and units](https://docs.soliditylang.org/en/latest/units-and-global-variables.html)
-
-# 🛠 Buidl
-
-Check out all the [active branches](https://github.com/scaffold-eth/scaffold-eth/branches/active), [open issues](https://github.com/scaffold-eth/scaffold-eth/issues), and join/fund the 🏰 [BuidlGuidl](https://BuidlGuidl.com)!
-
-  
- - 🚤  [Follow the full Ethereum Speed Run](https://medium.com/@austin_48503/%EF%B8%8Fethereum-dev-speed-run-bd72bcba6a4c)
-
-
- - 🎟  [Create your first NFT](https://github.com/scaffold-eth/scaffold-eth/tree/simple-nft-example)
- - 🥩  [Build a staking smart contract](https://github.com/scaffold-eth/scaffold-eth/tree/challenge-1-decentralized-staking)
- - 🏵  [Deploy a token and vendor](https://github.com/scaffold-eth/scaffold-eth/tree/challenge-2-token-vendor)
- - 🎫  [Extend the NFT example to make a "buyer mints" marketplace](https://github.com/scaffold-eth/scaffold-eth/tree/buyer-mints-nft)
- - 🎲  [Learn about commit/reveal](https://github.com/scaffold-eth/scaffold-eth-examples/tree/commit-reveal-with-frontend)
- - ✍️  [Learn how ecrecover works](https://github.com/scaffold-eth/scaffold-eth-examples/tree/signature-recover)
- - 👩‍👩‍👧‍👧  [Build a multi-sig that uses off-chain signatures](https://github.com/scaffold-eth/scaffold-eth/tree/meta-multi-sig)
- - ⏳  [Extend the multi-sig to stream ETH](https://github.com/scaffold-eth/scaffold-eth/tree/streaming-meta-multi-sig)
- - ⚖️  [Learn how a simple DEX works](https://medium.com/@austin_48503/%EF%B8%8F-minimum-viable-exchange-d84f30bd0c90)
- - 🦍  [Ape into learning!](https://github.com/scaffold-eth/scaffold-eth/tree/aave-ape)
-
-# 💌 P.S.
-
-🌍 You need an RPC key for testnets and production deployments, create an [Alchemy](https://www.alchemy.com/) account and replace the value of `ALCHEMY_KEY = xxx` in `packages/react-app/src/constants.js` with your new key.
-
-📣 Make sure you update the `InfuraID` before you go to production. Huge thanks to [Infura](https://infura.io/) for our special account that fields 7m req/day!
-
-# 🏃💨 Speedrun Ethereum
-Register as a builder [here](https://speedrunethereum.com) and start on some of the challenges and build a portfolio.
-
-# 💬 Support Chat
-
-Join the telegram [support chat 💬](https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA) to ask questions and find others building with 🏗 scaffold-eth!
-
----
-
-🙏 Please check out our [Gitcoin grant](https://gitcoin.co/grants/2851/scaffold-eth) too!
-
-### Automated with Gitpod
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#github.com/scaffold-eth/scaffold-eth)
+- Improve the front end.
+- Sign a message or the document with metamask or any other wallet.
+- Write tests for the smart contracts.
+- Run the tools like slither, echidna and manticore in order to detect bugs in the contracts.
+- Deploy a subgraph so it is easier to search the contracts created by task, contributor, deadline, etc.
+- The possibility to add more than one task in each smart contract
