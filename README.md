@@ -63,9 +63,18 @@ yarn deploy
 
 📱 Open http://localhost:3000 to see the app
 
+## IPFS
+
+To upload the document to IPFS I followed this [tutorial](https://dev.to/edge-and-node/uploading-files-to-ipfs-from-a-web-application-50a). You will need to create an IPFS project in [Infura](https://www.infura.io/) and create a `.env` file inside `packages/react-app` like this one:
+
+```bash
+REACT_APP_IPFS_PROJECT_ID="<your-infura-project-id>"
+REACT_APP_IPFS_PROJECT_SECRET="<your-infura-project-secret>"
+```
+
 # Deploy the project to a testnet
 
-Whe deplying remember to change the block number for indexing events in `FactoryEvents.jsx`
+When deploying remember to change the block number for indexing events in `FactoryEvents.jsx`
 
 # For the future:
 
