@@ -11,9 +11,11 @@ There are two smart contracts in this dapp: `Factory.sol` and `ContributorContra
 
 # Live demo
 
-I deployed to goerli testnet. You can interact with the dapp in this link.
-Here is a demo video on youtube.
-The contracts are deployed at this addresses:
+- I deployed to goerli testnet. You can interact with the dapp at this link: [befitting-fuel.surge.sh](https://befitting-fuel.surge.sh/)
+- Also, here is a demo video on [youtube](). PENDING
+- The contracts are verified at this addresses:
+  - Factory: [0xA5611094f163e4FfBf8b46a29ae687092E9AC087](https://goerli.etherscan.io/address/0xA5611094f163e4FfBf8b46a29ae687092E9AC087#code)
+  - ContributorContract: [0xf6dD5E4F344A9fb9A28483621559f3944B5Db1CA](https://goerli.etherscan.io/address/0xf6dD5E4F344A9fb9A28483621559f3944B5Db1CA#code)
 
 # Directory Structure
 
@@ -74,13 +76,19 @@ REACT_APP_IPFS_PROJECT_SECRET="<your-infura-project-secret>"
 
 # Deploy the project to a testnet
 
-When deploying remember to change the block number for indexing events in `FactoryEvents.jsx`
+To deploy the project to goerli testnet I used the steps provided in [SpeedrunEthereum](https://speedrunethereum.com/challenge/simple-nft-example), starting from Checkpoint 3.
+
+It is important to mention that after you have deployed your contracts to the testnet and published your front end to surge you should go back to the default values that you had when you were working locally.
 
 # For the future:
 
 - Improve the front end.
 - Sign a message or the document with metamask or any other wallet.
 - Write tests for the smart contracts.
-- Run the tools like slither, echidna and manticore in order to detect bugs in the contracts.
+- Run tools like slither, echidna and manticore in order to detect bugs in the contracts.
 - Deploy a subgraph so it is easier to search the contracts created by task, contributor, deadline, etc.
 - The possibility to add more than one task in each smart contract
+
+# Contact
+
+If you have any question, feel free to reach out on [twitter](https://twitter.com/wildanvin) ✌️
