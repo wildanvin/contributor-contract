@@ -9,10 +9,12 @@ There are two smart contracts in this dapp: `Factory.sol` and `ContributorContra
 3. After the deadline the DAO can approve, disapprove, or get the funds back from the `ContributorContract`.
 4. If the `ContributorContract` gets approved by the DAO, the contributor can claim the reward.
 
+Note: The negotiation of the reward needs to happen off-chain maybe in discord or telegram
+
 # Live demo
 
 - I deployed to goerli testnet. You can interact with the dapp at this link: [befitting-fuel.surge.sh](https://befitting-fuel.surge.sh/)
-- Also, here is a demo video on [youtube](). PENDING
+- Also, here is a demo video on [youtube](https://youtu.be/j6-fFVDvfTc).
 - The contracts are verified at this addresses:
   - Factory: [0xA5611094f163e4FfBf8b46a29ae687092E9AC087](https://goerli.etherscan.io/address/0xA5611094f163e4FfBf8b46a29ae687092E9AC087#code)
   - ContributorContract: [0xf6dD5E4F344A9fb9A28483621559f3944B5Db1CA](https://goerli.etherscan.io/address/0xf6dD5E4F344A9fb9A28483621559f3944B5Db1CA#code)
